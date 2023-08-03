@@ -12,7 +12,7 @@ import { useState } from "react";
 
 const Start = ({ navigation }) => {
   const [name, setName] = useState("");
-  const [selectedColor, setSelectedColor] = useState("backgroundColor.a");
+  const [selectedColor, setSelectedColor] = useState("");
 
   const backgroundColor = {
     a: "#090C08",
@@ -52,29 +52,29 @@ const Start = ({ navigation }) => {
               <TouchableOpacity
                 style={[
                   styles.circle,
-                  selectedColor === backgroundColor.a &&
+                  selectedColor === backgroundColor.b &&
                     styles.borderSelectedCircle,
-                  { backgroundColor: backgroundColor.a },
+                  { backgroundColor: backgroundColor.b },
                 ]}
-                onPress={() => setSelectedColor(backgroundColor.a)}
+                onPress={() => setSelectedColor(backgroundColor.b)}
               />
               <TouchableOpacity
                 style={[
                   styles.circle,
-                  selectedColor === backgroundColor.a &&
+                  selectedColor === backgroundColor.c &&
                     styles.borderSelectedCircle,
-                  { backgroundColor: backgroundColor.a },
+                  { backgroundColor: backgroundColor.c },
                 ]}
-                onPress={() => setSelectedColor(backgroundColor.a)}
+                onPress={() => setSelectedColor(backgroundColor.c)}
               />
               <TouchableOpacity
                 style={[
                   styles.circle,
-                  selectedColor === backgroundColor.a &&
+                  selectedColor === backgroundColor.d &&
                     styles.borderSelectedCircle,
-                  { backgroundColor: backgroundColor.a },
+                  { backgroundColor: backgroundColor.d },
                 ]}
-                onPress={() => setSelectedColor(backgroundColor.a)}
+                onPress={() => setSelectedColor(backgroundColor.d)}
               />
             </View>
           </View>
@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
   },
 
   borderSelectedCircle: {
-    borderWidth: 2,
-    borderColor: "#090C08",
+    borderWidth: 5,
+    borderColor: "#aaa",
   },
 
   button: {
