@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import { useState } from "react";
+import { Platform, KeyboardAvoidingView } from "react-native";
 
 const Start = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -92,6 +93,9 @@ const Start = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
+      {Platform.OS === "ios" ? (
+        <KeyboardAvoidingView behavior="padding" />
+      ) : null}
     </View>
   );
 };
