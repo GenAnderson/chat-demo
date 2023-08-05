@@ -27,7 +27,7 @@ const Chat = ({ route, navigation }) => {
     setMessages([
       {
         _id: 1,
-        text: "You've entered the chat",
+        text: "Hi Hi",
         createdAt: new Date(),
         user: {
           _id: 2,
@@ -37,7 +37,7 @@ const Chat = ({ route, navigation }) => {
       },
       {
         _id: 2,
-        text: "This is a system message",
+        text: "You've entered the chat",
         createdAt: new Date(),
         system: true,
       },
