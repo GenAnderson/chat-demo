@@ -41,6 +41,7 @@ const Start = ({ navigation }) => {
         console.log(error);
       });
   };
+
   return (
     <View style={styles.container}>
       <ImageBackground

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { Bubble, GiftedChat } from "react-native-gifted-chat";
+import { StyleSheet, View } from "react-native";
+import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import {
   addDoc,
@@ -9,8 +9,9 @@ import {
   query,
   collection,
 } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Chat = ({ route, navigation, db }) => {
+const Chat = ({ route, navigation, db, isConnected }) => {
   const { name, selectedColor, uid } = route.params;
   const [messages, setMessages] = useState([]);
 
@@ -24,7 +25,7 @@ const Chat = ({ route, navigation, db }) => {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: "#000",
+            backgroundColor: selectedColor,
           },
           left: {
             backgroundColor: "#FFF",
@@ -34,25 +35,51 @@ const Chat = ({ route, navigation, db }) => {
     );
   };
 
+  const cacheTexts = async (textToCache) => {
+    try {
+      await AsyncStorage.setItem("texts_cache", JSON.stringify(textToCache));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const loadCachedTexts = async () => {
+    const cachedTexts = (await AsyncStorage.getItem("texts_cache")) || [];
+    setMessages(JSON.parse(cachedTexts));
+  };
+
+  const renderInputToolbar = (props) => {
+    if (isConnected) return <InputToolbar {...props} />;
+    else return null;
+  };
+
+  let unsubChatty;
   useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-    const unsubChatty = onSnapshot(q, (documentsSnapshot) => {
-      let newMessages = [];
-      documentsSnapshot.forEach((doc) => {
-        newMessages.push({
-          id: doc.id,
-          ...doc.data(),
-          createdAt: new Date(doc.data().createdAt.toMillis()),
+    if (isConnected === true) {
+      // unregister current onSnapshot() listener to avoid registering multiple listeners when use effect code is re-executed.
+      if (unsubChatty) unsubChatty();
+      unsubChatty = null;
+
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+      unsubChatty = onSnapshot(q, (documentsSnapshot) => {
+        let newMessages = [];
+        documentsSnapshot.forEach((doc) => {
+          newMessages.push({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: new Date(doc.data().createdAt.toMillis()),
+          });
         });
+        cacheTexts(newMessages);
+        setMessages(newMessages);
       });
-      setMessages(newMessages);
-    });
+    } else loadCachedTexts();
 
     // Clean up code
     return () => {
       if (unsubChatty) unsubChatty();
     };
-  }, []);
+  }, [isConnected]);
 
   useEffect(() => {
     navigation.setOptions({ title: name });
@@ -67,6 +94,7 @@ const Chat = ({ route, navigation, db }) => {
           addMessageToFirebase(messages);
         }}
         user={{ _id: uid, name }}
+        renderInputToolbar={renderInputToolbar}
       />
       {Platform.OS === "android" ? (
         <KeyboardAvoidingView behavior="height" />
