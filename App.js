@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Alert } from "react-native";
+import { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -8,11 +9,10 @@ import {
   disableNetwork,
   enableNetwork,
 } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 import Start from "./components/Start";
 import Chat from "./components/Chat";
-import { useEffect } from "react";
-import { Alert } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,9 +30,10 @@ const App = () => {
     appId: "1:100044212953:web:56365636b6cc0ba1e48cc8",
   };
 
-  // Initialize Firebase
+  // Initialize Firebase & storage
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const storage = getStorage(app);
 
   // get connection status
   const connectionStatus = useNetInfo();
@@ -53,6 +54,7 @@ const App = () => {
           {(props) => (
             <Chat
               db={db}
+              storage={storage}
               {...props}
               isConnected={connectionStatus.isConnected}
             />
