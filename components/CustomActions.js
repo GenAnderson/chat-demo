@@ -14,6 +14,8 @@ const CustomActions = ({
   userID,
 }) => {
   const actionSheet = useActionSheet();
+
+  //Action options menu
   const onActionPress = () => {
     const options = [
       "Choose From Library",
@@ -41,6 +43,7 @@ const CustomActions = ({
     );
   };
 
+  // returns a unique name for photos
   const generateReference = (uri) => {
     const timeStamp = new Date().getTime();
     const imageName = uri.split("/")[uri.split("/").length - 1];
