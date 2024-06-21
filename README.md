@@ -1,5 +1,6 @@
 # Chatty
 
+![Chatty mobile snippet](assets/Chatty.png)
 Provides users with a chat interface and options to share images and their location
 
 1. Enter your name
